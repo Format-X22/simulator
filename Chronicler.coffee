@@ -3,13 +3,14 @@ io.spaces = 4
 storage = './storage.json'
 merge = require('merge')
 
-exports.getNonce = () ->
-	read().nonce
+exports.nonce = () ->
+	nonce = read().nonce
 
-exports.setNonce = (nonce) ->
 	write {
-		nonce: nonce
+		nonce: ++nonce
 	}
+
+	nonce
 
 exports.log = (message) ->
 	data = read()
