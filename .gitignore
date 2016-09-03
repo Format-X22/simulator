@@ -1,3 +1,5 @@
 *.js
+!butler.js
 *.js.map
 .idea
+node_modules
