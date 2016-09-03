@@ -37,7 +37,9 @@ getPositionSupported = (next) ->
 		supported = false
 		return
 
-	broker.isSupported glass, order, next
+	broker.isSupported glass, order, (result) ->
+		supported = result
+		next()
 
 getGoodPositions = (next) ->
 	broker.getGoodPositions glass, (positions) ->
