@@ -1,30 +1,17 @@
-chronicler = require './chronicler'
-log = chronicler.log
-
-exports.getMoney = (next) ->
-	log 'Состояние денег'
+exports.clean = () ->
 	#
 
 exports.getOrder = (next) ->
-	log 'Текущий ордер'
+	#
+
+exports.setOrder = (next) ->
 	#
 
 exports.getGlass = (next) ->
-	log 'Стакан'
-	#
+    #
 
-exports.isSupported = (glass, order, next) ->
-	log 'Проверка поддержки'
-	#
+exports.getMoney = (next) ->
+    #
 
-exports.getGoodPositions = (glass, next) ->
-	log 'Хорошие позиции'
-	#
-
-exports.remove = (next) ->
-	log 'Удаление ордера'
-	#
-
-exports.set = (target, next) ->
-	log 'Установка ордера'
+exports.getLastOrder = (next) ->
 	#

@@ -1,69 +1,21 @@
 broker = require './broker'
-waitTime = 10 * 1000
-
-order = null
-supported = false
-good = false
-glass = []
-usd = 0
-btc = 0
+analyst = require './analyst'
 
 trade = () ->
-	getState -> getAnalytics -> doResolution -> wait -> trade()
+	broker.clean()
+	broker.getOrder (order) ->
+		if order
+			isNoSupport -> setOrderIfGoodPosition()
+		else
+			setOrderIfGoodPosition()
 
-getState = (next) ->
-	getMoney -> getOrder -> getGlass -> next()
+isNoSupport = (next) ->
+	analyst.getSupport (support) ->
+		unless support then next()
 
-getMoney = (next) ->
-	broker.getMoney (money) ->
-		{usd, btc} = money
-		next()
-
-getOrder = (next) ->
-	broker.getOrder (result) ->
-		order = result
-		next()
-
-getGlass = (next) ->
-	broker.getGlass (result) ->
-		glass = result
-		next()
-
-getAnalytics = (next) ->
-	getPositionSupported -> getGoodPositions -> next()
-
-getPositionSupported = (next) ->
-	if order
-		supported = false
-		return
-
-	broker.isSupported glass, order, (result) ->
-		supported = result
-		next()
-
-getGoodPositions = (next) ->
-	broker.getGoodPositions glass, (positions) ->
-		good = positions
-		next()
-
-doResolution = (next) ->
-	switch
-		when order and not supported and good
-			replace -> next()
-		when not order and good
-			set -> next()
-
-replace = (next) ->
-	broker.remove -> set -> next()
-
-set = (next) ->
-	switch
-		when btc and good.sell
-			broker.set good.sell, next
-		when usd and good.buy
-			broker.set good.buy, next
-
-wait = (next) ->
-	setTimeout next, waitTime
+setOrderIfGoodPosition = () ->
+	analyst.getGoodPosition (good) ->
+		if good then broker.setOrder()
 
 trade()
+setInterval trade, 60 * 1000
